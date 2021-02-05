@@ -3510,6 +3510,42 @@ let api = function Binance(options = {}) {
     },
 
     /**
+     * Creates a market buy order
+     * @param {string} symbol - the symbol to buy
+     * @param {numeric} quoteOrderQty - the quantity required
+     * @param {object} flags - additional buy order flags
+     * @param {function} callback - the callback function
+     * @return {promise or undefined} - omitting the callback returns a promise
+     */
+    quoteMarketBuy: function (
+      symbol,
+      quoteOrderQty,
+      flags = { type: "MARKET" },
+      callback = false
+    ) {
+      if (typeof flags === "function") {
+        // Accept callback as third parameter
+        callback = flags;
+        flags = { type: "MARKET" };
+      }
+      if (typeof flags.type === "undefined") flags.type = "MARKET";
+      if (!callback) {
+        return new Promise((resolve, reject) => {
+          callback = (error, response) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(response);
+            }
+          };
+          quoteOrder("BUY", symbol, quoteOrderQty, 0, flags, callback);
+        });
+      } else {
+        quoteOrder("BUY", symbol, quoteOrderQty, 0, flags, callback);
+      }
+    },
+
+    /**
      * Creates a market sell order
      * @param {string} symbol - the symbol to sell
      * @param {numeric} quantity - the quantity required
