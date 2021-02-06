@@ -477,7 +477,6 @@ let api = function Binance(options = {}) {
     side,
     symbol,
     quoteOrderQty,
-    price,
     flags = {},
     callback = false
   ) => {
@@ -491,13 +490,12 @@ let api = function Binance(options = {}) {
     };
     if (typeof flags.type !== "undefined") opt.type = flags.type;
     if (opt.type.includes("LIMIT")) {
-      opt.price = price;
+
       if (opt.type !== "LIMIT_MAKER") {
         opt.timeInForce = "GTC";
       }
     }
     if (opt.type === "OCO") {
-      opt.price = price;
       opt.stopLimitPrice = flags.stopLimitPrice;
       opt.stopLimitTimeInForce = "GTC";
       delete opt.type;
@@ -3538,10 +3536,10 @@ let api = function Binance(options = {}) {
               resolve(response);
             }
           };
-          quoteOrder("BUY", symbol, quoteOrderQty, 0, flags, callback);
+          quoteOrder("BUY", symbol, quoteOrderQty, flags, callback);
         });
       } else {
-        quoteOrder("BUY", symbol, quoteOrderQty, 0, flags, callback);
+        quoteOrder("BUY", symbol, quoteOrderQty, flags, callback);
       }
     },
 
@@ -3610,10 +3608,10 @@ let api = function Binance(options = {}) {
               resolve(response);
             }
           };
-          quoteOrder("SELL", symbol, quoteOrderQty, 0, flags, callback);
+          quoteOrder("SELL", symbol, quoteOrderQty, flags, callback);
         });
       } else {
-        quoteOrder("SELL", symbol, quoteOrderQty, 0, flags, callback);
+        quoteOrder("SELL", symbol, quoteOrderQty, flags, callback);
       }
     },
 
